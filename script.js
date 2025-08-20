@@ -1,25 +1,33 @@
-// ⚠️ CAMBIA la URL por la de tu modelo de Teachable Machine
+// ⚠️ CAMBIA esta URL por la de tu modelo en Teachable Machine
 const URL = "https://teachablemachine.withgoogle.com/models/TU_MODELO/";
 
 let model, webcam, labelContainer, maxPredictions;
 
 async function init() {
-    const modelURL = URL + "model.json";
-    const metadataURL = URL + "metadata.json";
+    try {
+        const modelURL = URL + "model.json";
+        const metadataURL = URL + "metadata.json";
 
-    model = await tmImage.load(modelURL, metadataURL);
-    maxPredictions = model.getTotalClasses();
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
 
-    const flip = true;
-    webcam = new tmImage.Webcam(400, 300, flip);
-    await webcam.setup();
-    await webcam.play();
-    window.requestAnimationFrame(loop);
+        const flip = true;
+        webcam = new tmImage.Webcam(400, 300, flip);
+        await webcam.setup(); // aquí se pide permiso de cámara
+        await webcam.play();
+        window.requestAnimationFrame(loop);
 
-    document.getElementById("webcam-container").appendChild(webcam.canvas);
-    labelContainer = document.getElementById("label-container");
-    for (let i = 0; i < maxPredictions; i++) {
-        labelContainer.appendChild(document.createElement("div"));
+        document.getElementById("webcam-container").innerHTML = "";
+        document.getElementById("webcam-container").appendChild(webcam.canvas);
+
+        labelContainer = document.getElementById("label-container");
+        labelContainer.innerHTML = "";
+        for (let i = 0; i < maxPredictions; i++) {
+            labelContainer.appendChild(document.createElement("div"));
+        }
+    } catch (error) {
+        alert("⚠️ No se pudo iniciar la cámara. Verifica permisos del navegador o usa HTTPS (GitHub Pages).");
+        console.error(error);
     }
 }
 
@@ -37,3 +45,4 @@ async function predict() {
         labelContainer.childNodes[i].innerHTML = classPrediction;
     }
 }
+
