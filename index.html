@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Clasificador de Residuos - IA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Librerías de Teachable Machine -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest"></script>
+</head>
+<body>
+  <header>
+    <h1>♻️ Clasificador de Residuos</h1>
+    <p>Inteligencia Artificial con Teachable Machine</p>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Prueba tu residuo</h2>
+      <p>Haz clic en el botón y permite el acceso a tu cámara.</p>
+      <button onclick="init()">Iniciar Cámara</button>
+      <div id="webcam-container"></div>
+      <div id="label-container"></div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Desarrollado por: <strong>Prof. Enzo Román Celada</strong></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
