@@ -4,7 +4,7 @@
 const MODEL_URL = "https://teachablemachine.withgoogle.com/models/xhik3-sbN/";
 let model, webcam, maxPredictions;
 let running = false;
-let facingMode = "environment"; // preferimos la trasera en móviles
+let facingMode = "environment"; // preferimos cámara trasera en móviles
 
 // UI refs
 const startBtn = document.getElementById("startBtn");
@@ -18,7 +18,7 @@ const resultLabel = document.getElementById("resultLabel");
 const resultDetail = document.getElementById("resultDetail");
 const barsWrap = document.getElementById("bars");
 
-// Diccionario de clases corregido
+// Diccionario de clases (por si el modelo quedó con "Class 1/2")
 const CLASS_LABELS = {
   "Class 1": "No Reciclable",
   "Class 2": "Reciclable"
@@ -38,21 +38,17 @@ switchBtn.addEventListener("click", async () => {
 // Inicializa modelo + cámara
 async function initCameraAndModel() {
   if (!isSecureContext()) {
-    toastStatus("Necesitás HTTPS para usar la cámara (GitHub Pages funciona).", "bad");
+    toastStatus("Necesitás HTTPS para usar la cámara.", "bad");
     return;
   }
 
   startBtn.disabled = true;
   toastStatus("Cargando modelo…", "neutral");
 
-  // Cargar modelo
   model = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
   maxPredictions = model.getTotalClasses();
 
-  // Crear barras de probabilidad
   buildBars(await model.getClassLabels?.() || []);
-
-  // Preparar webcam
   await startCamera();
   running = true;
   stopBtn.disabled = false;
@@ -63,7 +59,7 @@ async function initCameraAndModel() {
 }
 
 async function startCamera() {
-  const flip = true; 
+  const flip = true; // espejado para vista natural
   webcam = new tmImage.Webcam(640, 480, flip);
   try {
     await webcam.setup({ facingMode });
@@ -72,7 +68,7 @@ async function startCamera() {
   }
   await webcam.play();
 
-  webcamPlaceholder && webcamPlaceholder.remove();
+  if (webcamPlaceholder) webcamPlaceholder.remove();
   webcamContainer.innerHTML = "";
   webcamContainer.appendChild(webcam.canvas);
 }
@@ -89,9 +85,7 @@ async function stop() {
   stopBtn.disabled = true;
   switchBtn.disabled = true;
 
-  if (webcam) {
-    await webcam.stop();
-  }
+  if (webcam) await webcam.stop();
   toastStatus("Detenido", "neutral");
   resultPanel.classList.remove("result-bad", "result-good");
   resultLabel.textContent = "Cámara detenida";
@@ -99,8 +93,7 @@ async function stop() {
 }
 
 function isSecureContext() {
-  const isHttps = location.protocol === "https:" || location.hostname === "localhost";
-  return isHttps;
+  return location.protocol === "https:" || location.hostname === "localhost";
 }
 
 async function loop() {
@@ -114,8 +107,7 @@ function normalizeName(name) {
   return (name || "").toLowerCase().replace(/\s|_/g, "");
 }
 function isRecyclableClass(name) {
-  const n = normalizeName(name);
-  return /reciclable|recycle/.test(n);
+  return /reciclable|recycle/.test(normalizeName(name));
 }
 
 async function predict() {
@@ -123,7 +115,6 @@ async function predict() {
   prediction.sort((a, b) => b.probability - a.probability);
   const top = prediction[0];
 
-  // Usamos nombre mapeado
   const displayName = mapLabel(top.className);
   const recyclable = isRecyclableClass(displayName);
   const confidence = (top.probability * 100).toFixed(1) + "%";
