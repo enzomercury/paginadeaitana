@@ -1,0 +1,173 @@
+:root{
+  --green-700:#2e7d32;
+  --green-500:#43a047;
+  --green-400:#66bb6a;
+  --green-100:#e8f5e9;
+  --black:#121212;
+  --gray-900:#1f1f1f;
+  --gray-700:#3a3a3a;
+  --gray-500:#6b6b6b;
+  --gray-300:#cfcfcf;
+  --white:#ffffff;
+  --shadow-lg: 0 20px 35px rgba(0,0,0,.25);
+  --shadow-md: 0 12px 24px rgba(0,0,0,.18);
+  --radius: 18px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  color:var(--black);
+  background:
+    radial-gradient(80vw 40vh at 80% -20%, rgba(46,125,50,.18), transparent 60%),
+    linear-gradient(180deg, #f9fbf9 0%, #f3f7f3 100%);
+}
+
+a{color:var(--green-700); text-decoration: none;}
+a:hover{text-decoration: underline;}
+small, .small{font-size:.9rem; color:var(--gray-500);}
+
+.site-header{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:1rem; padding:18px clamp(16px, 4vw, 40px);
+  background: linear-gradient(180deg, var(--green-700), var(--green-500));
+  color:var(--white);
+  box-shadow: var(--shadow-md);
+  position: sticky; top:0; z-index: 10;
+}
+
+.brand{display:flex; align-items:center; gap:16px}
+.logo3d{
+  display:grid; place-items:center; width:54px; height:54px;
+  border-radius:16px;
+  color:#c8f7d0; background:linear-gradient(180deg, #173d1a, #0e2a10);
+  box-shadow: inset 0 3px 8px rgba(255,255,255,.12), 0 10px 25px rgba(0,0,0,.35);
+  transform: perspective(700px) rotateX(6deg) rotateY(-6deg);
+}
+.titles h1{margin:0; font-size: clamp(1.15rem, 2.6vw, 1.6rem); font-weight:800}
+.subtitle{margin:.15rem 0 0 0; opacity:.9}
+
+.actions{display:flex; gap:.6rem; flex-wrap:wrap}
+.btn{
+  border:1px solid rgba(255,255,255,.3);
+  background: rgba(255,255,255,.15);
+  color:#fff; padding:.6rem .9rem; border-radius:12px;
+  backdrop-filter: blur(6px);
+  cursor:pointer; font-weight:600;
+}
+.btn.primary{background:#fff; color:var(--green-700); border-color:#fff;}
+.btn:disabled{opacity:.5; cursor:not-allowed;}
+.btn.ghost:hover{background: rgba(255,255,255,.22)}
+.btn.primary:hover{filter: brightness(0.95);}
+
+.container{
+  display:grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(14px, 2vw, 22px);
+  padding: clamp(16px, 4vw, 40px);
+  max-width: 1200px; margin: 0 auto;
+}
+
+.card{
+  grid-column: span 12;
+  background:#fff; border-radius: var(--radius);
+  box-shadow: var(--shadow-lg); padding: clamp(16px, 2.4vw, 24px);
+  border: 1px solid #e8e8e8;
+}
+.card-header{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px}
+.card h2{margin:0; font-size: clamp(1.05rem, 2.2vw, 1.35rem)}
+
+.tilt{transform-style: preserve-3d}
+.tilt:hover{transform: perspective(1100px) rotateX(1.2deg) rotateY(-1.2deg); transition: transform .25s ease}
+
+.camera-card{grid-column: span 7}
+.result-card{grid-column: span 5}
+.info-card{grid-column: span 12}
+
+@media (max-width: 980px){
+  .camera-card, .result-card{grid-column: span 12}
+}
+
+.badge{
+  padding: .35rem .6rem; border-radius: 999px; font-size:.85rem; font-weight:700;
+}
+.badge.neutral{background:#eef4ee; color:var(--green-700); border:1px solid #dfe9df}
+.badge.good{background:#e6f6eb; color:#1b5e20; border:1px solid #ccead5}
+.badge.bad{background:#212121; color:#fff; border:1px solid #000}
+
+.webcam-shell{
+  position: relative;
+  width:100%; max-width: 640px; margin-inline:auto;
+  aspect-ratio: 4/3; border-radius:18px; overflow:hidden;
+  background: repeating-conic-gradient(from 0deg, #f3f7f3 0% 5%, #e9f3ea 5% 10%);
+  border:1px solid #e5efe6;
+  box-shadow: inset 0 10px 30px rgba(0,0,0,.05);
+}
+#webcam-container canvas{
+  width:100%; height:100%; display:block;
+  filter: saturate(1.05) contrast(1.02);
+}
+.placeholder{
+  width:100%; height:100%; display:grid; place-content:center; gap:.5rem;
+  color:var(--gray-700);
+}
+.placeholder-icon{font-size: 2rem}
+
+.legend{margin-top:10px; color:var(--gray-500)}
+
+.result-panel{
+  display:flex; align-items:center; gap:14px;
+  padding:14px; border-radius:14px;
+  background: linear-gradient(180deg, #ffffff, #f7fbf7);
+  border:1px solid #e7eee7;
+}
+.result-icon{font-size:2.2rem}
+.result-title{font-size:1.2rem; font-weight:800}
+.result-detail{font-size:.95rem; color:var(--gray-700)}
+
+.bars{margin-top:14px; display:flex; flex-direction:column; gap:10px}
+.bar{
+  display:grid; grid-template-columns: 1fr auto; gap:10px; align-items:center;
+  background:#fbfdfb; border:1px solid #e4eee5; border-radius:12px; padding:8px 10px;
+}
+.bar .name{font-weight:700; color:#0d3b16}
+.bar .meter{
+  width:100%; height:10px; background:#e8f3ea; border-radius:999px; overflow:hidden; border:1px solid #dbe9de;
+}
+.bar .fill{height:100%; width:0%;}
+.fill.good{background: linear-gradient(90deg, var(--green-400), var(--green-700));}
+.fill.neutral{background: linear-gradient(90deg, #9e9e9e, #212121);}
+.tip{margin-top:12px}
+.tip summary{cursor:pointer; color:var(--green-700); font-weight:700}
+
+.grid-2{display:grid; grid-template-columns: 1fr 1fr; gap:18px}
+@media (max-width: 760px){ .grid-2{grid-template-columns: 1fr} }
+
+.timeline{margin:10px 0 0 18px}
+.bullets{margin:10px 0 0 18px}
+.tags{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+.tag{
+  padding:.3rem .6rem; border-radius:999px; font-weight:700; font-size:.85rem; border:1px solid;
+}
+.tag.good{background:#e6f6eb; color:#1b5e20; border-color:#b9e5c5}
+.tag.warn{background:#fff0f0; color:#2c2c2c; border-color:#e7c9c9}
+
+.site-footer{
+  margin-top:28px; padding:18px clamp(16px, 4vw, 40px);
+  display:flex; flex-direction:column; gap:8px; align-items:center; justify-content:center;
+  color:#fff; background: linear-gradient(180deg, #0b0b0b, #141414);
+}
+
+code{background:#f1f4f1; padding:.1rem .35rem; border-radius:6px}
+
+/* Estados de resultado */
+.result-good .result-icon{filter: none}
+.result-good .result-title{color: var(--green-700)}
+.result-bad{
+  background: linear-gradient(180deg, #202020, #141414) !important;
+  color:#fff;
+}
+.result-bad .result-detail{color:#eee}
+
