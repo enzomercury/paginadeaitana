@@ -1,37 +1,122 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Clasificador de Residuos - IA</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Librerías de Teachable Machine -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reciclaje Inteligente — 8° Computación · Liceo Tacuabé</title>
+  <meta name="theme-color" content="#2e7d32" />
+  <meta name="description" content="App educativa que usa una IA entrenada en Teachable Machine para reconocer residuos reciclables o no reciclables.">
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Librerías de IA -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
 </head>
 <body>
-  <header>
-    <h1>♻️ Clasificador de Residuos</h1>
-    <p>Inteligencia Artificial entrenada con Teachable Machine</p>
+  <header class="site-header">
+    <div class="brand">
+      <div class="logo3d" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="30" height="30" role="img" aria-label="Reciclaje">
+          <path d="M16.5 6l-1.06 1.82 1.44 2.5h-2.88L12 8l1.06-1.82L10.5 3h3l3 3zM7.5 18l1.06-1.82-1.44-2.5h2.88L12 16l-1.06 1.82L13.5 21h-3l-3-3zM3 10.5L4.82 9.44 7.32 10.88V8l2-1.15v3.27l2.68 1.55-2 1.15-2.32-1.34V14L3 12.5v-2z" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="titles">
+        <h1>Reciclaje Inteligente</h1>
+        <p class="subtitle">Detección en tiempo real de residuos <strong>reciclables</strong> vs <strong>no reciclables</strong> con IA</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="startBtn" class="btn primary">Iniciar cámara</button>
+      <button id="stopBtn" class="btn ghost" disabled>Detener</button>
+      <button id="switchBtn" class="btn ghost" disabled>Cambiar cámara</button>
+    </div>
   </header>
 
-  <main>
-    <div class="card">
-      <h2>Prueba tu residuo</h2>
-      <p>Haz clic en el botón y permite el acceso a tu cámara.</p>
-      <button onclick="init()">Iniciar Cámara</button>
-      <div id="webcam-container"></div>
-      <div id="label-container"></div>
-    </div>
+  <main class="container">
+    <!-- Tarjeta cámara -->
+    <section class="card camera-card tilt">
+      <div class="card-header">
+        <h2>Visor de cámara</h2>
+        <span id="statusBadge" class="badge neutral">En espera</span>
+      </div>
+
+      <div id="webcam-wrap">
+        <div id="webcam-container" class="webcam-shell">
+          <div id="webcam-placeholder" class="placeholder">
+            <div class="placeholder-icon">📷</div>
+            <p>Presioná <b>Iniciar cámara</b> para comenzar.</p>
+          </div>
+        </div>
+        <div class="legend">
+          <small>Si estás en celular y ves la cámara frontal, tocá <b>Cambiar cámara</b>.</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tarjeta resultados -->
+    <section class="card result-card tilt">
+      <div class="card-header">
+        <h2>Resultado</h2>
+      </div>
+
+      <div id="resultPanel" class="result-panel">
+        <div class="result-icon" aria-hidden="true">♻️</div>
+        <div>
+          <div id="resultLabel" class="result-title">Sin datos aún</div>
+          <div id="resultDetail" class="result-detail">Esperando predicciones…</div>
+        </div>
+      </div>
+
+      <div class="bars" id="bars"></div>
+      <details class="tip">
+        <summary>Consejo de uso</summary>
+        <p>Acercá un objeto a la cámara, mantenelo estable y con buena luz. Evitá fondos muy recargados.</p>
+      </details>
+    </section>
+
+    <!-- Tarjeta info educativa -->
+    <section class="card info-card">
+      <div class="card-header">
+        <h2>Acerca del proyecto</h2>
+      </div>
+      <div class="grid-2">
+        <div>
+          <h3>Metodología (2 clases)</h3>
+          <ol class="timeline">
+            <li><b>Búsqueda y captura</b> de imágenes: web y fotos propias.</li>
+            <li><b>Etiquetado</b> en dos categorías: “Reciclable” y “No reciclable”.</li>
+            <li><b>Entrenamiento</b> de la IA en <i>Teachable Machine</i>.</li>
+            <li><b>Exportación</b> del modelo y <b>publicación web</b>.</li>
+          </ol>
+          <p class="small">Enlace del modelo: <a href="https://teachablemachine.withgoogle.com/models/xhik3-sbN/" target="_blank" rel="noopener">xhik3-sbN</a></p>
+        </div>
+        <div>
+          <h3>¿Por qué reciclar?</h3>
+          <ul class="bullets">
+            <li>Reduce residuos en vertederos.</li>
+            <li>Ahorra energía y materias primas.</li>
+            <li>Disminuye emisiones y contaminación.</li>
+          </ul>
+          <h3>Ejemplos</h3>
+          <div class="tags">
+            <span class="tag good">Papel limpio</span>
+            <span class="tag good">Plástico PET</span>
+            <span class="tag good">Latas</span>
+            <span class="tag warn">Orgánicos</span>
+            <span class="tag warn">Papel sucio</span>
+            <span class="tag warn">Vidrio roto a granel</span>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <footer>
-    <p>Desarrollado por: <strong>Prof. Enzo Román Celada</strong></p>
+  <footer class="site-footer">
+    <div class="credit">Desarrollado por: <b>8° Ciencias de la Computación - Liceo Tacuabé</b></div>
+    <div class="note small">Esta es una app educativa. La IA puede cometer errores; usá criterio humano.</div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
+
 
